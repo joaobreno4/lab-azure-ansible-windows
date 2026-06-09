@@ -13,10 +13,10 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Instalar Ansible e biblioteca do WinRM
+      - name: Instalar Ansible e WinRM (Modo Pipx)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ansible python3-winrm
+          pipx install ansible
+          pipx inject ansible pywinrm
 
       - name: Criar Inventário Dinâmico com Secrets
         run: |
