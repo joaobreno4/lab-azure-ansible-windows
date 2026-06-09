@@ -1,0 +1,34 @@
+---
+- name: Configuração de Servidor Web IIS no Windows Server
+  hosts: windows
+  gather_facts: false
+
+  tasks:
+    - name: Garantir que a feature do IIS está instalada
+      ansible.windows.win_feature:
+        name: Web-Server
+        state: present
+        include_management_tools: true
+
+    - name: Garantir que o serviço do IIS (w3svc) está rodando e automático
+      ansible.windows.win_service:
+        name: w3svc
+        state: started
+        start_mode: auto
+
+    - name: Remover a página padrão do IIS
+      ansible.windows.win_file:
+        path: C:\inetpub\wwwroot\iisstart.htm
+        state: absent
+
+    - name: Criar nossa página web personalizada (index.html)
+      ansible.windows.win_copy:
+        dest: C:\inetpub\wwwroot\index.html
+        content: |
+          <html>
+          <head><title>Lab Ansible + Windows</title></head>
+          <body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
+              <h1>Deploy feito com sucesso via Ansible!</h1>
+              <p>Esta maquina foi provisionada com Terraform na Azure e configurada via WinRM.</p>
+          </body>
+          </html>
