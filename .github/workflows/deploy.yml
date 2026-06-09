@@ -1,0 +1,30 @@
+name: Deploy IIS via Ansible
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ansible-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar Ansible e biblioteca do WinRM
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+          pip install pywinrm
+
+      - name: Criar Inventário Dinâmico com Secrets
+        run: |
+          mkdir -p ansible
+          echo "[windows]" > ansible/inventory.ini
+          echo "${{ secrets.AZURE_VM_IP }} ansible_user=${{ secrets.WIN_USER }} ansible_password='${{ secrets.WIN_PASSWORD }}' ansible_connection=winrm ansible_winrm_transport=ntlm ansible_winrm_server_cert_validation=ignore" >> ansible/inventory.ini
+
+      - name: Executar Playbook
+        run: |
+          ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
