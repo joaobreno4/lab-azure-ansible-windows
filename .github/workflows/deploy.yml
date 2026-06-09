@@ -23,7 +23,7 @@ jobs:
         run: |
           mkdir -p ansible
           echo "[windows]" > ansible/inventory.ini
-          echo "${{ secrets.AZURE_VM_IP }} ansible_user=${{ secrets.WIN_USER }} ansible_password='${{ secrets.WIN_PASSWORD }}' ansible_connection=winrm ansible_winrm_transport=ntlm ansible_winrm_server_cert_validation=ignore" >> ansible/inventory.ini
+          echo "${{ secrets.AZURE_VM_IP }} ansible_user=${{ secrets.WIN_USER }} ansible_password='${{ secrets.WIN_PASSWORD }}' ansible_port=5985 ansible_connection=winrm ansible_winrm_transport=ntlm ansible_winrm_server_cert_validation=ignore" >> ansible/inventory.ini
 
       - name: Executar Playbook
         run: |
