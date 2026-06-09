@@ -13,10 +13,11 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Instalar Ansible e WinRM (Modo Pipx)
+      - name: Criar VENV e Instalar Ansible + WinRM
         run: |
-          pipx install ansible
-          pipx inject ansible pywinrm
+          python3 -m venv ansible_venv
+          ansible_venv/bin/pip install --upgrade pip
+          ansible_venv/bin/pip install ansible pywinrm requests
 
       - name: Criar Inventário Dinâmico com Secrets
         run: |
@@ -26,4 +27,4 @@ jobs:
 
       - name: Executar Playbook
         run: |
-          ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
+          ansible_venv/bin/ansible-playbook -i ansible/inventory.ini ansible/playbook.yml
