@@ -16,8 +16,7 @@ jobs:
       - name: Instalar Ansible e biblioteca do WinRM
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible
-          pip install pywinrm
+          sudo apt-get install -y ansible python3-winrm
 
       - name: Criar Inventário Dinâmico com Secrets
         run: |
